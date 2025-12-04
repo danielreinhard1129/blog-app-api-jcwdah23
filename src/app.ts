@@ -5,6 +5,7 @@ import { PORT } from "./config/env";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { SampleRouter } from "./modules/sample/sample.router";
 import { ProductRouter } from "./modules/product/product.router";
+import { AuthRouter } from "./modules/auth/auth.router";
 
 export class App {
   app: Express;
@@ -24,9 +25,11 @@ export class App {
   private routes() {
     const sampleRouter = new SampleRouter();
     const productRouter = new ProductRouter();
+    const authRouter = new AuthRouter();
 
     this.app.use("/samples", sampleRouter.getRouter());
     this.app.use("/products", productRouter.getRouter());
+    this.app.use("/auth", authRouter.getRouter());
   }
 
   private handleError() {
