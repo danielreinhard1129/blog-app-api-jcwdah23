@@ -12,4 +12,9 @@ export class AuthController {
     const result = await this.authService.register(req.body);
     return res.status(200).send(result);
   };
+
+  login = async (req: Request, res: Response) => {
+    const result = await this.authService.login(req.body);
+    return res.status(200).send(result);
+  };
 }
