@@ -1,6 +1,8 @@
+import { sign } from "jsonwebtoken";
 import { ApiError } from "../../utils/api-error";
-import { hashPassword } from "../../utils/password";
+import { comparePassword, hashPassword } from "../../utils/password";
 import { PrismaService } from "../prisma/prisma.service";
+import { LoginDTO } from "./dto/login.dto";
 import { RegisterDTO } from "./dto/register.dto";
 
 export class AuthService {
@@ -28,5 +30,25 @@ export class AuthService {
     });
 
     return { message: "register success" };
+  };
+
+  login = async (body: LoginDTO) => {
+    const user = await this.prisma.user.findFirst({
+      where: { email: body.email },
+    });
+
+    if (!user) throw new ApiError("Invalid credentials", 400);
+
+    const isPasswordMatch = await comparePassword(body.password, user.password);
+
+    if (!isPasswordMatch) throw new ApiError("Invalid credentials", 400);
+
+    const payload = { id: user.id };
+    const accessToken = sign(payload, process.env.JWT_SECRET!, {
+      expiresIn: "2h",
+    });
+
+    const { password, ...userWithoutPassword } = user;
+    return { ...userWithoutPassword, accessToken };
   };
 }
