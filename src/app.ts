@@ -6,6 +6,7 @@ import { errorMiddleware } from "./middlewares/error.middleware";
 import { SampleRouter } from "./modules/sample/sample.router";
 import { ProductRouter } from "./modules/product/product.router";
 import { AuthRouter } from "./modules/auth/auth.router";
+import { BlogRouter } from "./modules/blog/blog.router";
 
 export class App {
   app: Express;
@@ -26,10 +27,12 @@ export class App {
     const sampleRouter = new SampleRouter();
     const productRouter = new ProductRouter();
     const authRouter = new AuthRouter();
+    const blogRouter = new BlogRouter();
 
     this.app.use("/samples", sampleRouter.getRouter());
     this.app.use("/products", productRouter.getRouter());
     this.app.use("/auth", authRouter.getRouter());
+    this.app.use("/blogs", blogRouter.getRouter());
   }
 
   private handleError() {
