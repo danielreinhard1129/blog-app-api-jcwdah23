@@ -29,6 +29,7 @@ export class BlogRouter {
       validateBody(CreateBlogDTO),
       this.blogController.createBlog
     );
+    this.router.get("/", this.blogController.getBlogs);
   };
 
   getRouter = () => {
