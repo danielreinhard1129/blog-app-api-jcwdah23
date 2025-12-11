@@ -70,4 +70,17 @@ export class BlogService {
       meta: { page, take, total },
     };
   };
+
+  getBlogBySlug = async (slug: string) => {
+    const blog = await this.prisma.blog.findFirst({
+      where: { slug },
+      include: { user: { select: { name: true } } },
+    });
+
+    if (!blog) {
+      throw new ApiError("Blog not found", 404);
+    }
+
+    return blog;
+  };
 }
