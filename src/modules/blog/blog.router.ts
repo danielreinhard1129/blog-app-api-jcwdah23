@@ -30,6 +30,7 @@ export class BlogRouter {
       this.blogController.createBlog
     );
     this.router.get("/", this.blogController.getBlogs);
+    this.router.get("/:slug", this.blogController.getBlogBySlug);
   };
 
   getRouter = () => {
