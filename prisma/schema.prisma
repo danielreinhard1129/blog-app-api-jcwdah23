@@ -29,13 +29,15 @@ model Product {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  blogs     Blog[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  blogs        Blog[]
+  events       Event[]
+  transactions Transaction[]
 
   @@map("users")
 }
@@ -54,4 +56,43 @@ model Blog {
   updatedAt   DateTime @updatedAt
 
   @@map("blogs")
+}
+
+model Event {
+  id            Int           @id @default(autoincrement())
+  name          String        @unique
+  price         Int
+  availableSeat Int
+  date          DateTime
+  userId        Int
+  user          User          @relation(fields: [userId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  transactions  Transaction[]
+
+  @@map("events")
+}
+
+model Transaction {
+  id           Int               @id @default(autoincrement())
+  userId       Int
+  user         User              @relation(fields: [userId], references: [id])
+  eventId      Int
+  event        Event             @relation(fields: [eventId], references: [id])
+  qty          Int
+  price        Int
+  paymentProof String?
+  status       TransactionStatus @default(WAITING_FOR_PAYMENT)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@map("transactions")
+}
+
+enum TransactionStatus {
+  WAITING_FOR_PAYMENT
+  WAITING_FOR_CONFIRMATION
+  PAID
+  REJECT
+  EXPIRED
 }

@@ -7,6 +7,8 @@ import { SampleRouter } from "./modules/sample/sample.router";
 import { ProductRouter } from "./modules/product/product.router";
 import { AuthRouter } from "./modules/auth/auth.router";
 import { BlogRouter } from "./modules/blog/blog.router";
+import { TransactionRouter } from "./modules/transaction/transaction.router";
+import { initScheduler } from "./scripts";
 
 export class App {
   app: Express;
@@ -16,6 +18,7 @@ export class App {
     this.configure();
     this.routes();
     this.handleError();
+    initScheduler();
   }
 
   private configure() {
@@ -28,11 +31,13 @@ export class App {
     const productRouter = new ProductRouter();
     const authRouter = new AuthRouter();
     const blogRouter = new BlogRouter();
+    const transactionRouter = new TransactionRouter();
 
     this.app.use("/samples", sampleRouter.getRouter());
     this.app.use("/products", productRouter.getRouter());
     this.app.use("/auth", authRouter.getRouter());
     this.app.use("/blogs", blogRouter.getRouter());
+    this.app.use("/transactions", transactionRouter.getRouter());
   }
 
   private handleError() {
